@@ -1,0 +1,1299 @@
+{
+  "name": "EchoCraf_Project",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4ff45d74-b5e5-4197-a6c0-74c8c8c01d9a",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2480,
+        544
+      ],
+      "id": "fb0ee268-cc67-4647-bb56-8c22f05e5857",
+      "name": "Webhook",
+      "webhookId": "4ff45d74-b5e5-4197-a6c0-74c8c8c01d9a"
+    },
+    {
+      "parameters": {
+        "url": "https://youtube-transcript3.p.rapidapi.com/api/transcript-with-url",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.Reference }}"
+            },
+            {
+              "name": "flat_text",
+              "value": "true"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "youtube-transcript3.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "6d6df4222dmshe291cc489980e25p1fccf5jsn671bca16b0f8"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "Reference"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -336,
+        64
+      ],
+      "id": "95ddfb45-d088-4abd-8c4a-e85ee9217279",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "aa6c3911-5329-4242-86d9-2891e7e5a89a",
+              "leftValue": "={{ $json.body.data.fields[8].value }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1136,
+        1360
+      ],
+      "id": "cde4bf02-b50c-49b5-84db-e60c6621446c",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "22d50230-81d4-4b0e-add8-62818069468f",
+              "name": "Content_Purpose",
+              "value": "={{ $('Webhook').item.json.body.data.fields[8].value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        1344
+      ],
+      "id": "d6dca017-f10a-457a-a8cb-b9f141a96873",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $input.first().json.body.data.fields[7];\n\n\nconst selectedIds = data.value;\n\n\nconst options = data.options;\n\n\nconst selectedOptions = options.filter(opt => selectedIds.includes(opt.id));\n\nconst text = selectedOptions.length > 0 ? selectedOptions[0].text : null;\n\nreturn [\n  {\n    json: {\n      Content_Purpose: text\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        1696
+      ],
+      "id": "e6e2d822-e375-447c-9172-7b85100211ce",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6109d6eb-445a-4f01-adc9-9ebcbfe40d5f",
+              "leftValue": "={{ $json.body.data.fields[13].value }}",
+              "rightValue": {},
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1296,
+        80
+      ],
+      "id": "fda2374c-d48a-4632-8963-00c3b411f1e7",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c60e58c0-eb6a-4809-b4b5-84ca9794b2bd",
+              "name": "Reference",
+              "value": "={{ $('Webhook').item.json.body.data.fields[14].value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -592,
+        64
+      ],
+      "id": "56a003a3-1a38-42bb-a20f-ab5ed592db17",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// helper: extract the text of the selected option for a field\nfunction getSelectedText(field) {\n  const selectedIds = field.value;\n  const options = field.options || [];\n  const selectedOptions = options.filter(opt => selectedIds.includes(opt.id));\n  return selectedOptions.length > 0 ? selectedOptions[0].text : null;\n}\n\n// grab all needed fields\nconst fields = $input.first().json.body.data.fields;\n\nconst field9  = fields[9];\nconst field10 = fields[10];\nconst field11 = fields[11];\nconst field16 = fields[16];\n\n\n// return 4 separate items\nreturn [\n  { json: { Audience:     getSelectedText(field9)  } },\n  { json: { WritingStyle: getSelectedText(field10) } },\n  { json: { Tone:         getSelectedText(field11) } },\n  { json: { Output_in:    getSelectedText(field16) } }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        704
+      ],
+      "id": "bc41bd14-e4f1-48cf-b4e8-2693f04967d7",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b393c27-1aba-45a3-8a39-c6504c05a157",
+              "name": "CvContent",
+              "value": "={{ $json.result.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        -528
+      ],
+      "id": "0dc69367-2f80-4a18-ac10-c1d7f9e40640",
+      "name": "CvContent"
+    },
+    {
+      "parameters": {
+        "function": "arn:aws:lambda:eu-north-1:271472765660:function:Convert_DOC_To_Txt",
+        "payload": "={   \"url\": \"{{$json.body.data.fields[6].value[0].url}}\" }"
+      },
+      "type": "n8n-nodes-base.awsLambda",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -528
+      ],
+      "id": "1d5a5237-01fd-42e4-9c80-7fbab85333a9",
+      "name": "AWS Lambda(Convert CV Content To Text)",
+      "credentials": {
+        "aws": {
+          "id": "GSCVNVDucQmyqJL0",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Convert The CV content AS a Text ",
+        "height": 288,
+        "width": 560,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -656,
+        -608
+      ],
+      "typeVersion": 1,
+      "id": "0385e109-669e-4378-b5b1-cc0347cef4fb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "if the reference was a YouTube video, it will be converted to Text ",
+        "height": 272,
+        "width": 560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "b63ad6e0-7b4f-47df-95a2-1e609404af2d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "If Mention Your purpose by you ",
+        "height": 256,
+        "width": 608,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        1264
+      ],
+      "typeVersion": 1,
+      "id": "ce21e146-a44e-4191-bf7e-058e558cb329",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "If Mention Your purpose by Chooses which exist in the form, here I only get the text from your choose",
+        "height": 256,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        1600
+      ],
+      "typeVersion": 1,
+      "id": "9573cc60-69ee-44aa-831e-8144e2f484d8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e906c516-77c6-496d-9142-656af6832cf0",
+              "leftValue": "={{ $json.Content_Purpose[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        1360
+      ],
+      "id": "82bc81b8-9570-4c1e-bc11-986c3a783c86",
+      "name": "Content_Purpose (which Where did I get it from)"
+    },
+    {
+      "parameters": {
+        "content": "Extract From Options which exist in the form Only its Text Without its Id",
+        "height": 288,
+        "width": 624,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "85378b54-0c39-41b2-8bf3-c3011d7daf85",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "62ef777a-84fc-45c2-b675-7774d0847b19",
+              "name": "Reference",
+              "value": "={{ $json.body.data.fields[13].value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        -240
+      ],
+      "id": "13e9f4dd-598b-4306-bf2a-9ee287ef782b",
+      "name": "Reference"
+    },
+    {
+      "parameters": {
+        "content": "If Reference Not youtube Link",
+        "height": 240,
+        "width": 560,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "4b4eef76-dcb1-4a49-ac22-320472a9c55a",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "63790b7b-f1e0-4e2e-ab5b-a0d0de3774c8",
+              "leftValue": "={{ $json.Reference }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        80
+      ],
+      "id": "105917cc-f283-491c-b99a-26776dfb05d8",
+      "name": "Reference (which Where did I get it from)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "93b07268-4d2f-4664-9bab-c1e88ab38ccc",
+              "leftValue": "={{ $('Webhook').item.json.body.data.fields[14].value }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -912,
+        208
+      ],
+      "id": "d475c5dd-1dfc-4ad8-bd00-cea52bfedc80",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b393c27-1aba-45a3-8a39-c6504c05a157",
+              "name": "Reference",
+              "value": "={{ $json.result.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        368
+      ],
+      "id": "97849037-cdf9-4dcd-be7e-295a9d5bfb19",
+      "name": "Project Details"
+    },
+    {
+      "parameters": {
+        "content": "if the reference was a project details, it will be converted to Text ",
+        "height": 288,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "dbc98e07-77fb-4420-95cf-b5bd59ec82ad",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "function": "arn:aws:lambda:eu-north-1:271472765660:function:Convert_DOC_To_Txt",
+        "payload": "={   \"url\": \"{{ $json.body.data.fields[15].value[0].url }}\" }"
+      },
+      "type": "n8n-nodes-base.awsLambda",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        368
+      ],
+      "id": "b9414eca-2af2-45e6-a599-4f16c6bbedd6",
+      "name": "AWS Lambda(Convert project details To Text)",
+      "credentials": {
+        "aws": {
+          "id": "GSCVNVDucQmyqJL0",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1488,
+        496
+      ],
+      "id": "34a26875-d066-4241-8d95-ac197d97e02d",
+      "name": "Merge",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6ce6321e-b44d-4c51-8810-1d009c7f1e06",
+              "name": "Full Name",
+              "value": "={{ $json.body.data.fields[0].value }}",
+              "type": "string"
+            },
+            {
+              "id": "9a884675-9205-43b2-b4c2-f4d879b0977e",
+              "name": "Email",
+              "value": "={{ $json.body.data.fields[1].value }}",
+              "type": "string"
+            },
+            {
+              "id": "a833660f-ec0b-4109-9e82-abe1a0266ded",
+              "name": "Age",
+              "value": "={{ $json.body.data.fields[2].value }}",
+              "type": "number"
+            },
+            {
+              "id": "9a8eb1e6-f905-4d09-8d9a-d0611c574b30",
+              "name": "Academic Degree",
+              "value": "={{ $json.body.data.fields[3].value }}",
+              "type": "string"
+            },
+            {
+              "id": "fcb99b33-eeab-4c15-b842-b13a0a1f1131",
+              "name": "Current Working Scope",
+              "value": "={{ $json.body.data.fields[4].value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        1008
+      ],
+      "id": "d777f124-5a20-4b21-807e-6b9fa848288e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function node to combine 8 items into one JSON object\n\nconst result = {};\n\nfor (const item of items) {\n  Object.assign(result, item.json);\n}\n\nresult.createdAt = new Date().toISOString();\n\nreturn [\n  {\n    json: result\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        544
+      ],
+      "id": "af8fba62-7106-42e9-b760-3647d131ae62",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "tableName": "ClientProfiles",
+        "dataToSend": "autoMapInputData",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.awsDynamoDb",
+      "typeVersion": 1,
+      "position": [
+        3008,
+        192
+      ],
+      "id": "9d25f48c-8049-4008-b501-a7819fb1dedf",
+      "name": "Create or update an item1",
+      "credentials": {
+        "aws": {
+          "id": "GSCVNVDucQmyqJL0",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2912,
+        1184
+      ],
+      "id": "68cb655e-5185-436e-8ecd-859955634db0",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "d162nmOFzYqWbpXx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Name: Personalized Content Generator (ROC-T-TOC Prompting)\n\nDescription:\nThis tool transforms structured user inputs (profile, CV, references, purpose, audience, style, tone, language) into a single user message + system message pair optimized for LLMs.\n\nThe System Message defines the AI agent’s persona: a professional writing assistant that always respects the user’s intent, audience, and style preferences.\n\nThe User Message injects dynamic data collected from forms or webhooks (e.g., CV text, references, academic/work info, content purpose). It follows the ROC-T-TOC framework (Role, Objective, Context, Task, Tone, Output, Constraints).\n\nPurpose:\nTo generate personalized, high-quality written content (e.g., job applications, project showcases, research posts) that:\n\nAligns with the user’s stated purpose.\n\nTargets the selected audience.\n\nReflects chosen writing style and tone.\n\nIntegrates raw CV and reference material when available.\n\nOutput:\nOne clean draft text (400–600 words by default) in the requested language, ready for direct use by the end user — no meta commentary, no JSON, no system noise."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        3056,
+        1184
+      ],
+      "id": "c8386972-1d92-4472-a4cd-d43241372841",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.data.fields[1].value }}",
+        "subject": "Your post is done!",
+        "emailType": "text",
+        "message": "={{ $('Content Creator ').item.json.output }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "flux"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        5744,
+        1376
+      ],
+      "id": "0b1049dc-fd6d-4210-8cae-e0b6b3fc73c5",
+      "name": "Send a message1",
+      "webhookId": "4cf70b32-04dc-438b-b882-e2aaa695bee5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aUrrydwrEC8kvF70",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate a short, clear, and professional image description for a LinkedIn post using the following output data:\n\n\nGenerated Post: {{ $json.output }}\nContent_Purpose: {{ $('Code in JavaScript2').item.json.Content_Purpose }}\nOutput_in: {{ $('Code in JavaScript2').item.json.Output_in }}\nAudience: {{ $('Code in JavaScript2').item.json.Audience }}\nTone: {{ $('Code in JavaScript2').item.json.Tone }}\nCurrent Scope/Expertise: {{ $('Code in JavaScript2').item.json['Current Working Scope'] }}\nReference: {{ $('Code in JavaScript2').item.json.Reference }}\n\nThe description should be realistic and suitable for LinkedIn visuals.\n",
+        "options": {
+          "systemMessage": "R – ROLE\nYou are an AI assistant specialized in generating concise, professional image descriptions for LinkedIn visuals.\n\nO – OBJECTIVE\nProduce a short, clear, and realistic description that can guide the creation of a LinkedIn-ready image.\n\nC – CONTEXT\nYou will receive structured output data describing the post, its purpose, tone, audience, and the candidate’s expertise. This data should inform but not appear in the final description.\n\nT – TOOLS\n\nInput: Structured text data about the candidate and post.\n\nOutput: A single professional image description.\n\nT – TASKS\n\nAnalyze the provided output data.\n\nSelect only the details that are visually useful.\n\nWrite a short, recruiter-friendly description suitable for LinkedIn.\n\nO – OPERATING GUIDELINES\n\nKeep the description concise (1–5 sentences).\n\nMaintain a professional, realistic, and LinkedIn-appropriate style.\n\nFocus on clarity, expertise, and career purpose.\n\nOnly use details that strengthen the visual design.\n\nC – CONSTRAINTS\n\nDo not echo or reproduce raw input data.\n\nAvoid irrelevant or decorative language.\n\nDo not create abstract or fantastical visuals.\n\nThe output must be realistic, professional, and LinkedIn-ready."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        3456,
+        464
+      ],
+      "id": "465fe227-ee12-4244-97eb-fb10af9539f8",
+      "name": "Image Description"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3456,
+        688
+      ],
+      "id": "467d50c1-db84-42bd-864b-40e0d9dd64d9",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "d162nmOFzYqWbpXx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "inputs",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "flux"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3936,
+        464
+      ],
+      "id": "eae51fd2-00b2-49a3-b27d-f96b049f9a6f",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "content": "The rest of the data",
+        "height": 240,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        944
+      ],
+      "typeVersion": 1,
+      "id": "f0823b99-ea91-41f6-aa8c-40bd8301f03d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": " Function node to combine 8 items into one JSON object\n",
+        "height": 288,
+        "width": 416,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1936,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "7a7d3d4d-9911-4ac8-b132-a5cd84344d44",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Storage The Information",
+        "height": 208,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2896,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "5930e98f-c892-40b1-afb6-e5e249b17338",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 208,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3344,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "8b99eb5c-13cc-45c6-b5de-f8362a812f9b",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 192,
+        "width": 688,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2704,
+        896
+      ],
+      "typeVersion": 1,
+      "id": "7ac3b072-7cf2-45f8-975b-9252398b9370",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 176,
+        "width": 416,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5584,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "8f63e2c5-7187-43d3-b33a-91d71c89167e",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Craft content tailored to the user’s background and objectives.\n\n[OBJECTIVE]  \nHelp the user produce content aligned with their stated purpose: {{ $json.Content_Purpose }}.\n\n[CONTEXT]  \n- Full Name: {{ $json[\"Full Name\"] }}  \n- Email: {{ $json.Email }}  \n- Age: {{ $json.Age }}  \n- Academic Degree: {{ $json[\"Academic Degree\"] }}  \n- Current Scope of Work: {{ $json[\"Current Working Scope\"] }}  \n- CV Provided: {{ $json.CvContent ? \"Yes\" : \"No\" }}  \n\n[CV Extract]  \n{{ $json.CvContent }}  \n\n[REFERENCE MATERIAL]  \n{{ $json.Reference }}  \n\n[PURPOSE]  \n{{ $json.Content_Purpose }}  \n\n[AUDIENCE]  \n{{ $json.Audience }}  \n\n[STYLE]  \nWriting Style: {{ $json.WritingStyle }}  \nTone: {{ $json.Tone }}  \n\n[TASK]  \n1. Generate a polished draft that reflects the user’s profile and purpose.  \n2. Integrate CV content if available.  \n3. Use reference material if provided.  \n4. Make the writing relevant and appealing to the chosen audience.  \n\n[TONE]  \nFollow the tone exactly as selected: {{ $json.Tone }}.  \n\n[OUTPUT FORMAT]  \nLanguage: {{ $json.Output_in }}  \nReturn only the final draft text.  \n \n",
+        "options": {
+          "systemMessage": "Role  \nYou are EchoCraft AI, an expert content assistant specialized in helping students and freelancers craft clear, engaging, and personalized posts for professional and academic platforms like LinkedIn, Facebook, Medium, and Qabilah.\n\nObjective  \nYour goal is to generate authentic, tailored social media posts or articles that align with each user's unique academic background, career stage, and content purpose—such as showcasing projects, gaining internships, networking, or sharing knowledge.\n\nContext  \nYou receive detailed user data, including name, age, academic degree, current work scope, CV presence, target audience, preferred writing styles, tone, and references. Use this context to produce content that is relevant, engaging, and appropriate to the selected audience.\n\nTools  \nAccess user-uploaded CVs, portfolios, transcripts, and references. Utilize AI language generation models fine-tuned for formal and informal writing styles. Apply tone and style guidelines to adapt content length, structure, and vocabulary. Follow brand identity principles to maintain professionalism and a personal touch.\n\nTasks  \n- Summarize key highlights from the CV or portfolio.  \n- Integrate user-selected writing style and tone into the post.  \n- Tailor content according to purpose (job search, knowledge sharing, competitions, mentorship requests).  \n- Align messaging to the chosen audience segment (recruiters, industry professionals, peers).  \n- Incorporate references or style inspirations if provided.  \n- Produce final output in the requested language (English or Egyptian Arabic).  \n- Ensure content is clear, free of jargon, concise (100–200 words for posts), and engaging.\n\nOperating Guidelines  \n- Use a conversational, professional, and friendly style unless a different tone is specified.  \n- Avoid overly technical language unless the audience demands it.  \n- Incorporate short, compelling hooks and strong calls to action.  \n- Respect cultural and linguistic nuances of the selected output language.  \n- Follow platform norms for content length and format.  \n- Apply ethical guidelines, ensuring content originality and factual accuracy.\n\nConstraints  \n- Word count limits: 100–200 words per post or 300–500 words for articles.  \n- No sensitive or confidential information should be included.  \n- Avoid plagiarism; text must be unique.  \n- Maintain respectful and inclusive language.  \n- Content must not include special characters or formatting incompatible with platform posting.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2912,
+        944
+      ],
+      "id": "d83e9cb3-3526-4e67-90a2-1f2abd422e5d",
+      "name": "Content Creator "
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "1876ee93-288b-4361-893d-f5d77accd6c1",
+      "name": "Merge the Content with Image",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        4752,
+        720
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5264,
+        1376
+      ],
+      "id": "3bab8b31-b4d2-4b7c-86a7-ac99aa6dea03",
+      "name": "Merge1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AWS Lambda(Convert CV Content To Text)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Reference (which Where did I get it from)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Content_Purpose (which Where did I get it from)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Content_Purpose (which Where did I get it from)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Reference",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CvContent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Lambda(Convert CV Content To Text)": {
+      "main": [
+        [
+          {
+            "node": "CvContent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content_Purpose (which Where did I get it from)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Reference": {
+      "main": [
+        [
+          {
+            "node": "Reference (which Where did I get it from)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AWS Lambda(Convert project details To Text)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Project Details": {
+      "main": [
+        [
+          {
+            "node": "Reference (which Where did I get it from)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Lambda(Convert project details To Text)": {
+      "main": [
+        [
+          {
+            "node": "Project Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reference (which Where did I get it from)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Create or update an item1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Content Creator ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update an item1": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Creator ",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Content Creator ",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Description": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Merge the Content with Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        []
+      ]
+    },
+    "Content Creator ": {
+      "main": [
+        [
+          {
+            "node": "Image Description",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge the Content with Image",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge the Content with Image": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a22a50bd-b1fd-4731-b57f-0709dd3a46f4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "37c4b06a5afd9e6970f6da533a13f8fa1a71da9ec570bd74b310a2e57a2115b7"
+  },
+  "id": "JyH1q9I57FLQ7U9A",
+  "tags": []
+}
